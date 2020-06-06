@@ -107,6 +107,8 @@ class Contact extends Component<{}> {
           }}
         >
           <Text style={{ fontWeight: "500" }}>From Point Screen -></Text>
+          You can see your meetings that its finished with your teammate. You
+          should give point for your mate for her/him performance!
         </Text>
         <Text
           h3

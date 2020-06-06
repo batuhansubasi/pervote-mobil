@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 
 import Logo from "../components/Logo";
@@ -26,67 +27,95 @@ class Login extends Component<{}> {
     };
   }
 
-  static navigationOptions = {
-    header: null,
-  };
-
-  // redirect(routeName, accessToken) {
-  //   this.props.navigator.push({
-  //     name: routeName,
-  //   });
-  // }
-
   control() {
-    if (this.state.email.length < 3) {
-      this.setState({ error: "Password length is low for login!" });
+    if (this.state.email.length < 4) {
+      this.setState({ error: "Email length is low for login! (Min:4)" });
       this.setState({ showProgress: false });
       return false;
     }
-    // if (bla bla bla){
-    //   return false;
-    // }
+    if (this.state.password.length < 4) {
+      this.setState({ error: "Password length is low for login! (Min:4)" });
+      this.setState({ showProgress: false });
+      return false;
+    }
+    if (this.state.password.length === 0 || this.state.email.length === 0) {
+      this.setState({ error: "Email and password cant be empty for login." });
+      this.setState({ showProgress: false });
+      return false;
+    }
     return true;
-  }
-
-  storeToken(responseData) {
-    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err) => {
-      if (err) {
-        console.log("an error");
-        throw err;
-      }
-      console.log("storage is success");
-    }).catch((err) => {
-      console.log("error is: " + err);
-    });
   }
 
   async onLoginPressed() {
     this.setState({ showProgress: true });
     if (this.control()) {
       try {
-        let response = await fetch("http://localhost:3001/personnels/login", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: this.state.email,
-            password: this.state.password,
-          }),
-        });
+        let response = await fetch(
+          "http://192.168.1.111:3001/personnels/login",
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: this.state.email,
+              password: this.state.password,
+            }),
+          }
+        );
         console.log("Girmeye calistigimiz mail: " + this.state.email);
         console.log("Girmeye calistigimiz sifre: " + this.state.password);
         let res = await response.text();
         if (response.status >= 200 && response.status < 300) {
           let accessToken = res;
-          this.storeToken(accessToken);
-          console.log(res.length);
-          if (res.length !== 33 || res.length !== 36) {
+          if (!res.includes("error")) {
             this.setState({ error: "Login success" });
-            const { navigate } = this.props.navigation;
-            navigate("InformationDetail", { name: "deneme@deneme.com" });
             this.setState({ showProgress: false });
+            const { navigate } = this.props.navigation;
+            AsyncStorage.setItem("email", this.state.email);
+            navigate("Main", { name: this.state.email });
+          } else {
+            var obj = JSON.parse(res);
+            this.setState({ error: obj.error });
+            this.setState({ showProgress: false });
+          }
+        } else {
+          var obj = JSON.parse(res);
+          this.setState({ error: obj.error });
+          this.setState({ showProgress: false });
+        }
+      } catch (error) {
+        this.setState({ error: "We can't reach to my API." });
+        console.log(error);
+        this.setState({ showProgress: false });
+      }
+    }
+  }
+
+  async sendMailPressed() {
+    if (this.state.email.length === 0) {
+      this.setState({ error: "You must enter email info for send email" });
+    } else {
+      this.setState({ showProgress: true });
+      const mailurl =
+        "http://192.168.1.111:3001/personnels/forgetpassword/" +
+        this.state.email;
+      try {
+        let response = await fetch(mailurl, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        });
+        let res = await response.text();
+        console.log(res);
+        if (response.status >= 200 && response.status < 300) {
+          if (!res.includes("error")) {
+            this.setState({ error: "Email send" });
+            this.setState({ showProgress: false });
+            Alert.alert("Mail", "We send email to you");
           } else {
             var obj = JSON.parse(res);
             this.setState({ error: obj.error });
@@ -118,7 +147,6 @@ class Login extends Component<{}> {
           selectionColor="#fff"
           onChangeText={(text) => this.setState({ email: text })}
           keyboardType="email-address"
-          onSubmitEditing={() => this.password.focus()}
         />
         <TextInput
           style={styles.inputBox}
@@ -136,7 +164,10 @@ class Login extends Component<{}> {
           <Text style={styles.buttonText}>Sign IN!</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.forgetpassword}>
+        <TouchableOpacity
+          style={styles.forgetpassword}
+          onPress={this.sendMailPressed.bind(this)}
+        >
           <Text style={styles.text}>
             Did you forget your password?
             <Text style={{ fontWeight: "500" }}> Send Mail!</Text>
@@ -160,6 +191,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#ffffff",
   },
   inputBox: {
     width: 300,

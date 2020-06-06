@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
+import Moment from "moment";
 
 var mail = "";
 var sayac = 0;
@@ -118,7 +119,6 @@ class Messages extends Component<{}> {
             data3.personnels[u] = passmeet;
           }
         }
-        console.log(data3.personnels);
 
         try {
           let response = await fetch(
@@ -161,6 +161,7 @@ class Messages extends Component<{}> {
   }
 
   async initilization() {
+    this.setState({ showProgress: true });
     this.setState({ email: mail });
     const url = "http://192.168.1.111:3001/personnels/email/" + mail;
     const response = await fetch(url);
@@ -190,25 +191,31 @@ class Messages extends Component<{}> {
             "http://192.168.1.111:3001/personnels/" + newSinglePersonnel.persID;
           const newresponselast = await fetch(newurllast);
           const newdatalast = await newresponselast.json();
+          if (newdatalast !== null) {
+            var templete = {
+              photo: "",
+              name: "",
+              subject: "",
+              date: "",
+              point: "",
+              description: "",
+              meetingID: "",
+              ratedPersonnel: "",
+            };
+            templete.photo = newdatalast.photo;
+            templete.name = newdatalast.name;
+            templete.subject = newSingleData.subject;
+            templete.date = Moment(newSingleData.date).format(
+              "DD-MM-YYYY HH:mm"
+            );
+
+            // templete.date = newSingleData.date;
+            templete.meetingID = newSingleData._id;
+            templete.ratedPersonnel = newdatalast._id;
+            gosterilecekler[counter] = templete;
+            counter = counter + 1;
+          }
           ///////////////////////////////////////////////////////////////////////
-          var templete = {
-            photo: "",
-            name: "",
-            subject: "",
-            date: "",
-            point: "",
-            description: "",
-            meetingID: "",
-            ratedPersonnel: "",
-          };
-          templete.photo = newdatalast.photo;
-          templete.name = newdatalast.name;
-          templete.subject = newSingleData.subject;
-          templete.date = newSingleData.date;
-          templete.meetingID = newSingleData._id;
-          templete.ratedPersonnel = newdatalast._id;
-          gosterilecekler[counter] = templete;
-          counter = counter + 1;
         }
       }
     }

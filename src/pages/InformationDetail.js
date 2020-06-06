@@ -8,9 +8,15 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
+import * as Permissions from "expo-permissions";
+import { Dropdown } from "react-native-material-dropdown";
+import "../../config.js";
 
-const ACCESS_TOKEN = "access_token";
+var mail = "";
 
 class InformatıonDetail extends Component<{}> {
   constructor() {
@@ -18,108 +24,193 @@ class InformatıonDetail extends Component<{}> {
 
     this.state = {
       email: "",
-      password: "",
       error: "",
       name: "",
-      lastname: "",
+      surname: "",
       birthyear: "",
-      telephone: "",
-      departman: "",
+      phone: "",
+      department: "",
       isLoggenIn: "",
       showProgress: false,
       accessToken: "",
+      photodata: "https://bootdey.com/img/Content/avatar/avatar6.png",
+      dropdownlist: [],
     };
   }
 
-  // componentWillMount() {
-  //   this.getToken();
-  // }
+  componentDidMount() {
+    mail = this.props.route.params.name;
+    this.initilization();
+  }
 
-  static navigationOptions = {
-    header: null,
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  async initilization() {
+    this._isMounted = true;
+    if (this._isMounted) {
+      this.setState({ email: mail });
+
+      //Mail bilgisiyle apimize gittik.
+      const url = "http://192.168.1.111:3001/personnels/email/" + mail;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      const urldepartment =
+        global.config.i18n.backend_api.url + "admins/" + data.admin;
+      const responsedepartment = await fetch(urldepartment);
+      const datadepartment = await responsedepartment.json();
+      const values = datadepartment.departments;
+      console.log(values);
+
+      for (var i = 0; i < values.length; i++) {
+        const tempvalue = values[i];
+        Object.defineProperty(
+          tempvalue,
+          "value",
+          Object.getOwnPropertyDescriptor(tempvalue, "department")
+        );
+        delete tempvalue["department"];
+      }
+      this.setState({ dropdownlist: values });
+
+      //giriş yapılan userın detay bilgileri dolu mu?
+      if (
+        data.name != null &&
+        data.surname != null &&
+        data.phone != null &&
+        data.department != null &&
+        data.birthyear != null &&
+        data.photo != null
+      ) {
+        //Bilgiler boş değilse bastırmamız lazım.
+        this.setState({ name: data.name });
+        this.setState({ surname: data.surname });
+        this.setState({ phone: data.phone });
+        this.setState({ department: data.department });
+        this.setState({ birthyear: data.birthyear });
+        console.log("bilgier veritabanından");
+        this.setState({ photodata: data.photo });
+      } else {
+        console.log("bilgiler manuel");
+        this.getPermissionAsync();
+      }
+    }
+  }
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission",
+          "Sorry, we need camera roll permissions to make this work!"
+        );
+      }
+    }
   };
 
-  // async getToken() {
-  //   try {
-  //     let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
-  //     if (!accessToken) {
-  //       this.redirect("login");
-  //     } else {
-  //       this.setState({ accessToken: accessToken });
-  //     }
-  //   } catch (error) {
-  //     console.log("Something went wrong");
-  //     this.redirect("login");
-  //   }
-  // }
+  handleChoosePhoto = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        base64: true,
+        quality: 0.05,
+      });
+      if (!result.cancelled) {
+        this.setState({ photodata: "data:image/jpg;base64," + result.base64 });
+      }
+    } catch (E) {
+      console.log(E);
+    }
+  };
 
-  // async deleteToken() {
-  //   try {
-  //     await AsyncStorage.removeItem(ACCESS_TOKEN);
-  //     this.redirect("root");
-  //   } catch (error) {
-  //     console.log("Something went wrong");
-  //   }
-  // }
+  control() {
+    if (
+      this.state.photodata.length === 0 ||
+      this.state.department.length === 0 ||
+      this.state.phone.length === 0 ||
+      this.state.birthyear.length === 0 ||
+      this.state.surname.length === 0 ||
+      this.state.name.length === 0
+    ) {
+      this.setState({ error: "Please fill all!" });
+      return false;
+    } else {
+      return true;
+    }
+  }
 
-  // redirect(routeName) {
-  //   this.props.navigator.push({
-  //     name: routeName,
-  //     passProps: {
-  //       accessToken: this.state.accessToken,
-  //     },
-  //   });
-  // }
-
-  // onLogout() {
-  //   this.setState({ showProgress: true });
-  //   this.deleteToken();
-  // }
+  onChangeText(text) {
+    this.setState({ department: text });
+  }
 
   async onLoginPressed() {
     this.setState({ showProgress: true });
-    try {
-      // var obj = JSON.parse(this.prop);
-      // this.setState({ error: obj.error });
-      let response = await fetch("http://localhost:3001/personnels/update", {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: this.props.navigation.state.params.name,
-          password: this.state.password,
-          name: this.state.name,
-          surname: this.state.surname,
-          birthyear: this.state.birthyear,
-          phone: this.state.phone,
-          department: this.state.departman,
-        }),
-      });
-      let res = await response.text();
-      if (response.status >= 200 && response.status < 300) {
-        this.setState({ error: "Information is registered successfully" });
-        this.setState({ showProgress: false });
-      } else {
+    console.log(this.state.department);
+    if (this.control()) {
+      try {
+        let response = await fetch(
+          "http://192.168.1.111:3001/personnels/update",
+          {
+            method: "PUT",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: this.state.email,
+              name: this.state.name,
+              surname: this.state.surname,
+              birthyear: this.state.birthyear,
+              phone: this.state.phone,
+              department: this.state.department,
+              photo: this.state.photodata,
+            }),
+          }
+        );
+        let res = await response.text();
+        console.log(res);
+        if (response.status >= 200 && response.status < 300) {
+          this.setState({ error: "Information is registered successfully" });
+          this.setState({ showProgress: false });
+        } else {
+          console.log("selam");
+          // console.log(this.state.name);
+          // console.log(this.state.surname);
+          // console.log(this.state.birthyear);
+          // console.log(this.state.phone);
+          // console.log(this.state.department);
+          var obj = JSON.parse(res);
+          this.setState({ error: obj.error });
+          this.setState({ showProgress: false });
+        }
+      } catch (error) {
+        console.log("selam");
+        // console.log(this.state.name);
+        // console.log(this.state.surname);
+        // console.log(this.state.birthyear);
+        // console.log(this.state.phone);
+        // console.log(this.state.department);
         var obj = JSON.parse(res);
         this.setState({ error: obj.error });
         this.setState({ showProgress: false });
       }
-    } catch (error) {
-      var obj = JSON.parse(res);
-      this.setState({ error: obj.error });
+    } else {
       this.setState({ showProgress: false });
     }
   }
 
   render() {
+    const { photo } = this.state;
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <Image
-          style={styles.avatar}
-          source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }}
-        />
+        <TouchableOpacity onPress={this.handleChoosePhoto.bind()}>
+          <Image style={styles.avatar} source={{ uri: this.state.photodata }} />
+        </TouchableOpacity>
         <Text style={styles.text}>{this.state.error}</Text>
         <TextInput
           style={styles.inputBox}
@@ -127,6 +218,7 @@ class InformatıonDetail extends Component<{}> {
           placeholder="Name"
           placeholderTextColor="#ffffff"
           selectionColor="#fff"
+          value={this.state.name}
           onChangeText={(text) => this.setState({ name: text })}
         />
         <TextInput
@@ -135,6 +227,7 @@ class InformatıonDetail extends Component<{}> {
           placeholder="Surname"
           placeholderTextColor="#ffffff"
           selectionColor="#fff"
+          value={this.state.surname}
           onChangeText={(text) => this.setState({ surname: text })}
         />
         <TextInput
@@ -144,6 +237,7 @@ class InformatıonDetail extends Component<{}> {
           placeholderTextColor="#ffffff"
           selectionColor="#fff"
           keyboardType="numeric"
+          value={`${this.state.birthyear}`}
           onChangeText={(text) => this.setState({ birthyear: text })}
         />
         <TextInput
@@ -153,16 +247,24 @@ class InformatıonDetail extends Component<{}> {
           placeholderTextColor="#ffffff"
           selectionColor="#fff"
           keyboardType="phone-pad"
+          value={`${this.state.phone}`}
           onChangeText={(text) => this.setState({ phone: text })}
         />
-        <TextInput
-          style={styles.inputBox}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Departman"
-          placeholderTextColor="#ffffff"
-          selectionColor="#fff"
-          onChangeText={(text) => this.setState({ departman: text })}
-        />
+
+        <View style={styles.inputBox}>
+          <Dropdown
+            label="Department"
+            itemTextStyle={styles.buttonText}
+            value={this.state.department}
+            pickerStyle={styles.dropdown}
+            baseColor="#fff"
+            selectedItemColor="#fff"
+            textColor="#fff"
+            data={this.state.dropdownlist}
+            onChangeText={(input) => this.onChangeText(input)}
+          />
+        </View>
+
         <TouchableOpacity
           style={styles.button}
           onPress={this.onLoginPressed.bind(this)}
@@ -187,6 +289,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 105,
   },
   avatar: {
     width: 130,
@@ -194,9 +297,8 @@ const styles = StyleSheet.create({
     borderRadius: 63,
     borderWidth: 4,
     borderColor: "white",
-    marginBottom: 10,
+    // marginBottom: 10,
     alignSelf: "center",
-    marginTop: 20,
   },
   inputBox: {
     width: 300,
@@ -205,6 +307,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15, //<- inputun icindeki yazılar biraz önde baslıyor.
     fontSize: 25, //degistirdim
     color: "#ffffff",
+    marginVertical: 10,
+  },
+  dropdown: {
+    width: 300,
+    backgroundColor: "rgb(196,60,108)",
+    borderRadius: 25, //< - ovalleştirme
+    paddingHorizontal: 15, //<- inputun icindeki yazılar biraz önde baslıyor.
     marginVertical: 10,
   },
   button: {
@@ -234,3 +343,6 @@ const styles = StyleSheet.create({
 });
 
 export default InformatıonDetail;
+
+// const { navigate } = this.props.navigation;
+// navigate("Main", { name: this.props.navigation.state.params.name });

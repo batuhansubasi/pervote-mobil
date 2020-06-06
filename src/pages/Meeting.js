@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+import React, { Component } from "react";
 import {
   StyleSheet,
   AsyncStorage,
@@ -40,13 +40,16 @@ class Dashboard extends Component<{}> {
   }
 
   componentDidMount() {
-    mail = this.props.route.params.name;
-    this.setState({ email: this.props.route.params.name });
+    // mail = this.props.route.params.name;
+    // this.setState({ email: this.props.route.params.name });
     this.initilization();
     this.setState({ text: "Pick Date!" });
   }
 
   async initilization() {
+    let user = await AsyncStorage.getItem("email");
+    this.setState({ email: user });
+    mail = user;
     this.setState({ email: mail });
     const url = "http://192.168.1.111:3001/personnels/workfriendship/" + mail;
     const response = await fetch(url);
@@ -103,12 +106,13 @@ class Dashboard extends Component<{}> {
   };
 
   handleConfirmDate = (date) => {
-    this.setState({ text1: date.toString() });
     var newM = moment(date, "YYYY-MM-DDTHH:mm:ss.SSSS[Z]", true).add(
       3,
       "hours"
     );
     this.setState({ text: newM.toString() });
+
+    this.setState({ text1: moment(date).format("DD-MM-YYYY HH:mm") });
     this.hideDatePicker();
   };
 
@@ -138,7 +142,7 @@ class Dashboard extends Component<{}> {
       };
       persmeetings[i] = obj;
     }
-    console.log(this.state.text);
+    console.log("deneme");
     try {
       let response = await fetch("http://192.168.1.111:3001/meetings/add", {
         method: "POST",
@@ -209,7 +213,7 @@ class Dashboard extends Component<{}> {
     });
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.scrollView}>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
           <StatusBar />
           <Text style={styles.text}>{this.state.error}</Text>
           <TextInput
@@ -225,10 +229,10 @@ class Dashboard extends Component<{}> {
           <DateTimePickerModal
             isVisible={this.state.isDatePickerVisible}
             mode="datetime"
+            minimumDate={new Date()}
             locale="tr-TR"
             is24Hour={true}
             minuteInterval={10}
-            // minDate={new Date(Date.now() + 10 * 60 * 1000)} // todo
             onConfirm={this.handleConfirmDate}
             onCancel={this.hideDatePicker}
           />
@@ -242,7 +246,7 @@ class Dashboard extends Component<{}> {
             </Text>
           </TouchableOpacity>
 
-          <View>
+          <View style={styles.text}>
             <SectionedMultiSelect
               hideSelect={true}
               items={this.state.personnels}
@@ -278,7 +282,7 @@ class Dashboard extends Component<{}> {
             />
           </View>
 
-          <ScrollView style={styles.scrollContainer}>{meetings}</ScrollView>
+          <View>{meetings}</View>
         </ScrollView>
       </View>
     );
@@ -290,7 +294,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
+    textAlign: "center",
     backgroundColor: "#ffffff",
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginLeft: 10,
+    marginRight: 10,
   },
   inputBox: {
     width: 300,
@@ -316,11 +325,12 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
   },
   headertext: {
-    fontSize: 50,
+    fontSize: 30,
     fontWeight: "500",
     alignItems: "center",
     color: "rgb(196,60,108)",
     paddingHorizontal: 15,
+    textAlign: "center",
   },
   buttonText: {
     fontSize: 16,
@@ -346,9 +356,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
   },
-  scrollContainer: {
-    flex: 1,
-    marginBottom: 100,
+  contentContainer: {
+    marginHorizontal: 20,
   },
 });
 

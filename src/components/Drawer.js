@@ -43,14 +43,14 @@ const Screens = ({ navigation, style }) => {
           ),
         }}
       >
+        <Stack.Screen name="Meeting">
+          {(props) => <Meeting {...props} />}
+        </Stack.Screen>
         <Stack.Screen name="Contact">
           {(props) => <Contact {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Point">
           {(props) => <Point {...props} />}
-        </Stack.Screen>
-        <Stack.Screen name="Meeting">
-          {(props) => <Meeting {...props} />}
         </Stack.Screen>
         <Stack.Screen name="ChangePassword">
           {(props) => <ChangePassword {...props} />}

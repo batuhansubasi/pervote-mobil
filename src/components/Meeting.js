@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import moment from "moment";
 
 var mail = "";
 
@@ -24,8 +25,10 @@ export default class Meeting extends React.Component {
         </Text>
 
         <Text>
-          <Text style={{ fontWeight: "bold" }}>Date&Time: </Text>
-          <Text style={styles.noteText}>{this.props.val.date.toString()}</Text>
+          <Text style={{ fontWeight: "bold" }}>Date: </Text>
+          <Text style={styles.noteText}>
+            {moment(this.props.val.date).format("DD-MM-YYYY HH:mm")}
+          </Text>
         </Text>
 
         <TouchableOpacity
