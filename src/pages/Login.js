@@ -51,7 +51,7 @@ class Login extends Component<{}> {
     if (this.control()) {
       try {
         let response = await fetch(
-          "http://192.168.1.111:3001/personnels/login",
+          global.config.i18n.backend_api.url + "personnels/login",
           {
             method: "POST",
             headers: {
@@ -99,7 +99,8 @@ class Login extends Component<{}> {
     } else {
       this.setState({ showProgress: true });
       const mailurl =
-        "http://192.168.1.111:3001/personnels/forgetpassword/" +
+        global.config.i18n.backend_api.url +
+        "personnels/forgetpassword/" +
         this.state.email;
       try {
         let response = await fetch(mailurl, {

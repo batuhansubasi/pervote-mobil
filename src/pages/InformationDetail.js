@@ -53,7 +53,8 @@ class InformatıonDetail extends Component<{}> {
       this.setState({ email: mail });
 
       //Mail bilgisiyle apimize gittik.
-      const url = "http://192.168.1.111:3001/personnels/email/" + mail;
+      const url =
+        global.config.i18n.backend_api.url + "personnels/email/" + mail;
       const response = await fetch(url);
       const data = await response.json();
 
@@ -154,7 +155,7 @@ class InformatıonDetail extends Component<{}> {
     if (this.control()) {
       try {
         let response = await fetch(
-          "http://192.168.1.111:3001/personnels/update",
+          global.config.i18n.backend_api.url + "personnels/update",
           {
             method: "PUT",
             headers: {

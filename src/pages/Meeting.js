@@ -16,6 +16,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 
 import Meeting from "../components/Meeting";
+import "../config";
 
 var mail = "";
 
@@ -51,7 +52,8 @@ class Dashboard extends Component<{}> {
     this.setState({ email: user });
     mail = user;
     this.setState({ email: mail });
-    const url = "http://192.168.1.111:3001/personnels/workfriendship/" + mail;
+    const url =
+      global.config.i18n.backend_api.url + "personnels/workfriendship/" + mail;
     const response = await fetch(url);
     const data = await response.json();
 
@@ -95,7 +97,9 @@ class Dashboard extends Component<{}> {
 
     //halihazırda olan meetingslerin gösterilmesi...
     const newurl =
-      "http://192.168.1.111:3001/meetings/personnelid/" + this.state.myID;
+      global.config.i18n.backend_api.url +
+      "meetings/personnelid/" +
+      this.state.myID;
     const newresponse = await fetch(newurl);
     const newdata = await newresponse.json();
     this.setState({ meetingsArray: newdata });
@@ -144,19 +148,22 @@ class Dashboard extends Component<{}> {
     }
     console.log("deneme");
     try {
-      let response = await fetch("http://192.168.1.111:3001/meetings/add", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          admin: this.state.admin,
-          subject: this.state.subject,
-          date: this.state.text,
-          personnels: persmeetings,
-        }),
-      });
+      let response = await fetch(
+        global.config.i18n.backend_api.url + "meetings/add",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            admin: this.state.admin,
+            subject: this.state.subject,
+            date: this.state.text,
+            personnels: persmeetings,
+          }),
+        }
+      );
       let res = await response.text();
       if (response.status >= 200 && response.status < 300) {
         this.setState({ error: "Meeting saved successfully" });
@@ -174,7 +181,7 @@ class Dashboard extends Component<{}> {
   async deleteMeeting(key, val) {
     try {
       let response = await fetch(
-        "http://192.168.1.111:3001/meetings/" + val._id,
+        global.config.i18n.backend_api.url + "meetings/" + val._id,
         {
           method: "DELETE",
           headers: {

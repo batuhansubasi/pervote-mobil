@@ -35,7 +35,7 @@ class ChangePassword extends Component<{}> {
     this.setState({ showProgress: true });
     try {
       let response = await fetch(
-        "http://192.168.1.111:3001/personnels/changepassword",
+        global.config.i18n.backend_api.url + "personnels/changepassword",
         {
           method: "PUT",
           headers: {

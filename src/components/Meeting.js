@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import moment from "moment";
+import "../config";
 
 var mail = "";
 
@@ -11,7 +12,8 @@ export default class Meeting extends React.Component {
 
   async initilization() {
     this.setState({ email: mail });
-    const url = "http://192.168.1.111:3001/personnels/workfriendship/" + mail;
+    const url =
+      global.config.i18n.backend_api.url + "personnels/workfriendship/" + mail;
     const response = await fetch(url);
     const data = await response.json();
   }

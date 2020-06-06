@@ -11,6 +11,7 @@ import {
   Alert,
 } from "react-native";
 import Moment from "moment";
+import "../config";
 
 var mail = "";
 var sayac = 0;
@@ -70,20 +71,23 @@ class Messages extends Component<{}> {
       if (this.state.description) {
         // burada hali hazırdaki statelerdeki bilgiyi veritabanıyla kaydedeceğiz.
         try {
-          let response = await fetch("http://192.168.1.111:3001/points/add", {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              meetingID: this.state.meetingID,
-              ratedPersonnel: this.state.ratedPersonnel,
-              scorerPersonnel: this.state.myID,
-              pointValue: this.state.user,
-              description: this.state.description,
-            }),
-          });
+          let response = await fetch(
+            global.config.i18n.backend_api.url + "points/add",
+            {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                meetingID: this.state.meetingID,
+                ratedPersonnel: this.state.ratedPersonnel,
+                scorerPersonnel: this.state.myID,
+                pointValue: this.state.user,
+                description: this.state.description,
+              }),
+            }
+          );
           let res = await response.text();
           if (response.status >= 200 && response.status < 300) {
             if (!res.includes("error")) {
@@ -105,7 +109,9 @@ class Messages extends Component<{}> {
         }
 
         const url3 =
-          "http://192.168.1.111:3001/meetings/" + this.state.meetingID;
+          global.config.i18n.backend_api.url +
+          "meetings/" +
+          this.state.meetingID;
         const response3 = await fetch(url3);
         const data3 = await response3.json();
 
@@ -122,7 +128,9 @@ class Messages extends Component<{}> {
 
         try {
           let response = await fetch(
-            "http://192.168.1.111:3001/meetings/update/" + this.state.meetingID,
+            global.config.i18n.backend_api.url +
+              "meetings/update/" +
+              this.state.meetingID,
             {
               method: "PUT",
               headers: {
@@ -163,7 +171,7 @@ class Messages extends Component<{}> {
   async initilization() {
     this.setState({ showProgress: true });
     this.setState({ email: mail });
-    const url = "http://192.168.1.111:3001/personnels/email/" + mail;
+    const url = global.config.i18n.backend_api.url + "personnels/email/" + mail;
     const response = await fetch(url);
     const personeldata = await response.json();
 
@@ -172,7 +180,9 @@ class Messages extends Component<{}> {
 
     //kisinin girmis oldugu meetingsler...
     const newurl =
-      "http://192.168.1.111:3001/meetings/personnelid/" + this.state.myID;
+      global.config.i18n.backend_api.url +
+      "meetings/personnelid/" +
+      this.state.myID;
     const newresponse = await fetch(newurl);
     const newdata = await newresponse.json(); //newdata = bütün girilen meetingsler
 
@@ -188,7 +198,9 @@ class Messages extends Component<{}> {
         if (newSinglePersonnel.persID !== this.state.myID) {
           //Fotoğrafını çekmek icin...
           const newurllast =
-            "http://192.168.1.111:3001/personnels/" + newSinglePersonnel.persID;
+            global.config.i18n.backend_api.url +
+            "personnels/" +
+            newSinglePersonnel.persID;
           const newresponselast = await fetch(newurllast);
           const newdatalast = await newresponselast.json();
           if (newdatalast !== null) {
