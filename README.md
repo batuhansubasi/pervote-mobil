@@ -29,35 +29,60 @@ Bu repo web tarafını kapsamaktadır. Proje 3 farklı sistem üzerinden 3 repo 
 
 **1-** Proje bilgisayarınıza buradan indirilmelidir.
 
-**2-** İndirdiğiniz projenin dizinine gidin ve konsol ekranınızı açın.
+**2-** İndirdiğiniz projenin dizinine gidin ve konsol ekranınızı açın. Sırayla npm ve expo kütüphaneleri indirin.
 
 ```
 $npm install
 
 ```
 
+```
+$npm install -g expo-cli
+
+```
+
 **3-** Projeyi başlatabilirsiniz.
 
 ```
-$npm run
+$expo start
 ```
+
+**4-** Sizi varsayılan tarayıcınıza yönlendirecektir. Eğer mobil uygulama üzerinde denemek istiyorsanız, uygulama marketinden expo uygulamasını indirmelisiniz. Web üzerinden bazı componentler düzgün şekilde çalışmayacaktır. Tunnel modunda üretmiş olduğu QR Kodu telefonun kamerası kullanılarak okutulur.
 
 [*Projeye canlı olarak buradan erişilebilir.*](https://batuhansubasi.github.io/pervote-web/)
  
 ## Kullanilan Temel Teknolojiler
 
 ### React Native
-image,stylesheet,alert,text,view,image,textinput,touchableopacity, keyboardavoidingview, activiyindicator,asynstorage,statusbar,scrollview,
+
+Mobil için iki platforma ürün çıkarabilmek için tercih edildi. Web tarafında öğrenilen React bilgilerini pekiştirmek amacıyla devam edildi. 
+
+##### Kullanılan Kütüphaneler
+
+* **image** - Personel resmi, PerVote iconu gibi görseller için kullanıldı.
+* **stylesheet** - Componentlerin dizayn öğelerini özelleştirmek için kullanıldı.
+* **alert** - Kullanıcıya uyarı vermek için kullanıldı. (Kamera izni vb.)
+* **text** - Ekran üzerinde basit metin öğelerini yansıtmak için kullanıldı.
+* **textinput** - Personelin metin girebileceği girdiler için kullanıldı.
+* **touchableopacity** - Kullanılan componente ekran üzerinde basma işlevi için kullanıldı.
+* **keyboardavoidingview** - Klavye açıldığında bu view içerisindeki componentlerin, klavye üstüne otomatik olarak taşınması için kullanıldı.
+* **activityindicator** - Yapılan işlemlerde, işlemin devam ettiğini belirtmek için kullanıldı.
+* **asynstorage** - Bazı bilgilerin uygulama çalıştığında oraya yazdırılıp, başka bir sayfada bu bilginin çekilebilmesi adına kullanıldı.
+* **scrollview** - Toplantıların listelenmesi gibi sayısı belli olmayan componentlerin renderında kullanıcının rahatça aşağı-yukarı kaydırabilmesi adına kullanıldı.
 
 ### Expo
 
-expo/vector-icons
-expo-linear-gradient
-expo-asset
-expo-sms
-expo-image-picker
-expo-constants
-expo-permissions
+Geliştirmeleri anlık olarak telefonda görebilmek ve sahip olduğu hazır component kütüphanelerinden faydalanmak amacıyla kullanıldı.
+
+##### Kullanılan Kütüphaneler
+
+* **expo/vector-icons** - Drawer componentinde listenen screenler iconlarla görselleştirilerek UI Design pekiştirildi.
+* **expo-linear-gradient** - Drawer componentinde PerVote projesinin ana renkleri olan mor ve pembe renkleri kullanıldı.
+* **expo-asset** - Şirket logosu drawer componentinde gösterebilmek için kullanıldı.
+* **expo-sms** - Contact page' i üzerinden uygulama geliştiricilere sms atabilmek için telefonun sms ekranına otomatik olarak yönlendirilebilmesi sağlandı.
+* **expo-image-picker** - Personelin galerisinde ya da kamerasında kullanabileceği resmini sisteme yükleyebilmesi için kullanılmıştır.
+* **expo-constants** - Genel olarak buradaki componentlerin kullanılabilmesi için faydalanılmıştır.
+* **expo-permissions** - Personelin galerisine izin almak için kullanılmıştır.
 
 ## OpenSource Kullanilan Kutuphaneler
 
@@ -73,7 +98,7 @@ expo-permissions
 
 * [**react-native-sectioned-multi-select**](https://www.npmjs.com/package/react-native-sectioned-multi-select) - P
 
-* [**react-native-modal-datetime-picker**](https://www.npmjs.com/package/react-native-modal-datetime-picker) - P
+* [**react-native-modal-datetime-picker**](https://www.npmjs.com/package/react-native-modal-datetime-picker) - 
 
 ## Proje Dizini Klasor ve Dosyalar
 Bu örnek dizin harici, proje için kullanılan başka dosyalarda var. Sadece doğrudan yazdıklarımızı açıklayacağız.
