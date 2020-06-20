@@ -86,19 +86,19 @@ Geliştirmeleri anlık olarak telefonda görebilmek ve sahip olduğu hazır comp
 
 ## OpenSource Kullanilan Kutuphaneler
 
-* [**React Navigation**](https://reactnavigation.org/) - @react-navigation/stack,@react-navigation/drawer,@react-navigation/native
+* [**React Navigation**](https://reactnavigation.org/) - Drawer componenti için createstacknavigator metodu ile stack oluşturmak, createdrawernavigator nesnesi ile drawer oluşturmak için kullanıldı. Böylece; toplantı, puan, şifre değiştirme, personel detayı ve iletişime geç sayfaları arasında geçiş sağlandı.
 
-* [**React Native Reanimated**](https://www.npmjs.com/package/react-native-reanimated) - P
+* [**React Native Reanimated**](https://www.npmjs.com/package/react-native-reanimated) - Drawer nesnesi için esneklik sağlamasını adına kullanıldı.
 
-* [**expo-ui-kit**](https://www.npmjs.com/package/expo-ui-kit) - V
+* [**expo-ui-kit**](https://www.npmjs.com/package/expo-ui-kit) - Butonlar, textler ve blocklar için bu hazır kitten yararlanılmıştır.
 
-* [**moment**](https://www.npmjs.com/package/qs) - P
+* [**moment**](https://www.npmjs.com/package/qs) - DateTimePicker componentinden gelen timestamp değeri ya da veritabanından gelen timestamp değerinin formatlı şekilde kullanıcıya düzgün gözükmesi adına kullanılmıştır.
 
-* [**react-native-material-dropdown**](https://www.npmjs.com/package/react-native-material-dropdown) - L
+* [**react-native-material-dropdown**](https://www.npmjs.com/package/react-native-material-dropdown) - Web tarafında, ilgili personel admini tarafından girilmiş olan departmanların, personel bilgilerini güncellediği ekranda liste halinde personele sunulması amacıyla kullanılmıştır.
 
-* [**react-native-sectioned-multi-select**](https://www.npmjs.com/package/react-native-sectioned-multi-select) - P
+* [**react-native-sectioned-multi-select**](https://www.npmjs.com/package/react-native-sectioned-multi-select) - Toplantı seçerken hangi personellerin katılacağının belirlenmesi adına bu component kullanılmıştır. Aynı admine bağl
 
-* [**react-native-modal-datetime-picker**](https://www.npmjs.com/package/react-native-modal-datetime-picker) - 
+* [**react-native-modal-datetime-picker**](https://www.npmjs.com/package/react-native-modal-datetime-picker) - Toplantı tarihinin tarih ve saat yönünden seçilmesi adına kullanılmıştır.
 
 ## Proje Dizini Klasor ve Dosyalar
 Bu örnek dizin harici, proje için kullanılan başka dosyalarda var. Sadece doğrudan yazdıklarımızı açıklayacağız.
@@ -106,16 +106,16 @@ Bu örnek dizin harici, proje için kullanılan başka dosyalarda var. Sadece do
 pervote-web
  |-- src
       |-- components 
-           |-- Drawer.js  ->
-           |-- Logo.js    ->
-           |-- Meeting.js ->
+           |-- Drawer.js  -> PerVote logosu, uygulama ismi, giriş yapan kullanıcı maili ve kullanıcının işlevlerinden yararlanabileceği ekranlar arasında geçiş yapması için oluşturulmuş olan componenttir. Main sayfasından çağırılır.
+           |-- Logo.js    -> Drawer componentinde bulunan PerVote logosu için oluşturulmuş componenttir.
+           |-- Meeting.js -> Personelin katılacak olduğu toplantılar listelenmesi için oluşturulan tekil toplantı componentidir.
       |-- images 
-           |-- image.js   ->
-           |-- website_logo_slid_background.png  ->
+           |-- image.js   -> Drawer componentindeki PerVote logosudur.
+           |-- website_logo_slid_background.png  -> Giriş ekranındaki PerVote logosudur.
       |-- pages
-           |-- ChangePassword.js     ->
-           |-- Contact.js    ->
-           |-- InformationDetail.js  ->
+           |-- ChangePassword.js     -> Giriş yapmış olan personelin şifre değiştirme ekranıdır. Eski şifre, yeni şifre ve yeni şifrenin tekrarı kullanıcıdan alınır. Gerekli kontrollerden geçerse, personel update API' si ile şifre tekrar şifrelenerek güncellenir.
+           |-- Contact.js    ->  Personelin geliştiricilerle iletişime geçebileceği otomatik SMS ve mail sayfalarına yönlendirme yapılabileceği işlevler kazandırıldı. Drawer üzerindeki işlevlerin ne işe yaradığından bahsedildi.
+           |-- InformationDetail.js  -> 
            |-- Login.js      ->
            |-- Main.js       ->
            |-- Meeting.js    ->
