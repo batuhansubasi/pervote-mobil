@@ -92,7 +92,7 @@ Geliştirmeleri anlık olarak telefonda görebilmek ve sahip olduğu hazır comp
 
 * [**expo-ui-kit**](https://www.npmjs.com/package/expo-ui-kit) - Butonlar, textler ve blocklar için bu hazır kitten yararlanılmıştır.
 
-* [**moment**](https://www.npmjs.com/package/qs) - DateTimePicker componentinden gelen timestamp değeri ya da veritabanından gelen timestamp değerinin formatlı şekilde kullanıcıya düzgün gözükmesi adına kullanılmıştır.
+* [**moment**](https://www.npmjs.com/package/react-moment) - DateTimePicker componentinden gelen timestamp değeri ya da veritabanından gelen timestamp değerinin formatlı şekilde kullanıcıya düzgün gözükmesi adına kullanılmıştır.
 
 * [**react-native-material-dropdown**](https://www.npmjs.com/package/react-native-material-dropdown) - Web tarafında, ilgili personel admini tarafından girilmiş olan departmanların, personel bilgilerini güncellediği ekranda liste halinde personele sunulması amacıyla kullanılmıştır.
 
@@ -115,61 +115,58 @@ pervote-web
       |-- pages
            |-- ChangePassword.js     -> Giriş yapmış olan personelin şifre değiştirme ekranıdır. Eski şifre, yeni şifre ve yeni şifrenin tekrarı kullanıcıdan alınır. Gerekli kontrollerden geçerse, personel update API' si ile şifre tekrar şifrelenerek güncellenir.
            |-- Contact.js    ->  Personelin geliştiricilerle iletişime geçebileceği otomatik SMS ve mail sayfalarına yönlendirme yapılabileceği işlevler kazandırıldı. Drawer üzerindeki işlevlerin ne işe yaradığından bahsedildi.
-           |-- InformationDetail.js  -> 
-           |-- Login.js      ->
-           |-- Main.js       ->
-           |-- Meeting.js    ->
-           |-- Point.js      ->
-      |-- admin.model.js     -> 
-      |-- meeting.model.js   ->
-      |-- personnel.model.js ->
-      |-- point.model.js     ->
- |-- routes    
-      |-- admins.js          -> 
-      |-- meetings.js        -> 
-      |-- personnels.js      ->
-      |-- points.js          ->  
- |-- App.js                  -> 
- |-- config.js               -> 
+           |-- InformationDetail.js  -> Personelin resmini, ismini, soyismini, dogum yılını, telefon numarasını ve departman bilgilerini güncelleyebileceği ekran tasarlanmıştır. 4 alan için textinput componenti kullanılıp propsları özelleştirilmiştir. Departman bilgisi admin tarafında güncellenen bilgiye göre dropdown özelliğiyle render edilmektedir. Resim, galeriden veya kamera kullanılarak seçilebilir.
+           |-- Login.js      -> Personelin email ve şifresiyle beraber sisteme giriş yapabileceği ekrandır. Ayrıca, şifresini unuttuğu takdirde yeni şifresini mail üzerinden alabileceği işlev mevcuttur. 
+           |-- Main.js       -> Drawer componentinin çağrıldığı sayfadır.
+           |-- Meeting.js    -> Personelin yeni toplantı girebileceği ve hali hazırdaki toplantılarını görebileceği ekrandır. Toplantı konusu, toplantının zaman bilgileri ve toplantıya katılacak olan personel bigisiyle beraber toplantı kaydedilir.
+           |-- Point.js      -> Oylanacak olan personelin resmi ve ismi, toplantının konusu ve zaman edite kapalı şekilde gelir. Oyu verecek olan personel, açıklama ve puanı ile beraber oyunu onaylar.
+ |-- App.js                  -> Başlangıç dosyasıdır, hangi sayfa ile başlayacağının bilgisi stack içerisinde belirtilmiştir. Drawer componenti içerisinde ayrı, burada ayrı tanımlanmıştır.
+ |-- config.js               -> API' lerin kullanımı için heroku linki bu dosya içerisinde belirtilmiştir.
 ```
 ## Uygulama Ekran Goruntuleri
 
-![image](https://user-images.githubusercontent.com/30631029/83819475-a16f7280-a6d2-11ea-8c95-76b5a8b3e414.png)
+![Login](https://user-images.githubusercontent.com/30631029/85223859-c2bca800-b3ce-11ea-971a-764222844616.gif)
 
-**Ana Sayfa Ekranı:** Uygulama üzerinden adminin ve sistemin ne yapacağı hakkında bilgi veren giriş ekranıdır.
-
----
-
-![image](https://user-images.githubusercontent.com/30631029/83914763-8fe1a580-a77a-11ea-82d8-d6d6cfd31553.png)
-
-**Kaydolma Ekranı:** Sisteme üye olmak isteyen yönetici kaydolma ekranıdır.
+**Login Ekranı** 
 
 ---
 
-![image](https://user-images.githubusercontent.com/30631029/83913954-f9f94b00-a778-11ea-9bcf-bac9a9b876c1.png)
+![Drawer](https://user-images.githubusercontent.com/30631029/85223904-17f8b980-b3cf-11ea-819d-d488824b76a6.gif)
 
-**Giriş Ekranı:** Sisteme giriş yapacak olan yönetici giriş ekranıdır.
-
----
-
-![image](https://user-images.githubusercontent.com/30631029/83914078-3462e800-a779-11ea-9508-1a8881cf9195.png)
-
-**Admin Personel Yönetim Ekranı:** Personellerin resim, genel bilgi ve ortalama puanlarıyla beraber listelendiği, ekleme ve çıkarma seçeneklerinin olduğu ve ilgili personelin puan detaylarına gidebileceği işlevsellik bulunmaktadır.
+**Drawer Componenti** 
 
 ---
 
-![image](https://user-images.githubusercontent.com/30631029/83914174-607e6900-a779-11ea-8571-2b372cd630f5.png)
+![Meeting](https://user-images.githubusercontent.com/30631029/85223917-38287880-b3cf-11ea-8a1f-db363ee5dc15.gif)
 
-**İlgili Personelin Puan Detay Ekranı:** Personelin almış olduğu puanların, hangi toplantıda ve kim tarafından oy verildiğinin listelendiği ekrandır.
+**Meeting Ekranı**
 
 ---
 
-![image](https://user-images.githubusercontent.com/30631029/83914200-6bd19480-a779-11ea-98a1-fcb07811684c.png)
+![Puan](https://user-images.githubusercontent.com/30631029/85223968-93f30180-b3cf-11ea-9ce4-8447660428ad.gif)
 
-**Admin Departman Yönetim Ekranı:** Departmanların görüntülenmesi, eklenebilmesi ve çıkarabilmesini sağlayan yönetim ekranıdır.
+**Point Ekranı** 
+
+---
+
+![SifreDegistir](https://user-images.githubusercontent.com/30631029/85224507-9eaf9580-b3d3-11ea-9026-68d70db644db.gif)
+
+**Change Password Ekranı**
+
+---
+
+![InformationDetail](https://user-images.githubusercontent.com/30631029/85224514-a40ce000-b3d3-11ea-9d3d-17d9ac7bcd3b.gif)
+
+**Personnel Detail Ekranı**
+
+---
+
+![Contact](https://user-images.githubusercontent.com/30631029/85224517-aa9b5780-b3d3-11ea-9674-79667a6a9961.gif)
+
+**Contact Us Ekranı**
 
 ---
 
 ## Yapilabilecekler
 
-* name.com üzerinden domain alındı. (06 Mart) Şuan github page' den host yapılıyor. İleriye doğru kendi domain geçilebilir.
+* 
