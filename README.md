@@ -49,7 +49,7 @@ $expo start
 
 **4-** Sizi varsayılan tarayıcınıza yönlendirecektir. Eğer mobil uygulama üzerinde denemek istiyorsanız, uygulama marketinden expo uygulamasını indirmelisiniz. Web üzerinden bazı componentler düzgün şekilde çalışmayacaktır. Tunnel modunda üretmiş olduğu QR Kodu telefonun kamerası kullanılarak okutulur.
 
-[*Projeye canlı olarak buradan erişilebilir.*](https://batuhansubasi.github.io/pervote-web/)
+[*Projeye canlı olarak buradan erişilebilir.*](https://expo.io/@batuboy/pervote-mobil)
  
 ## Kullanilan Temel Teknolojiler
 
