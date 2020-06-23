@@ -169,4 +169,6 @@ pervote-web
 
 ## Yapilabilecekler
 
-* Drawer nesnesine logout butonu koyuldu, fakat uygulamadan çıkış yapmak ilk seferde becerilemedi.
+* Drawer nesnesine logout butonu koyuldu, fakat uygulamadan çıkış yapmak ilk seferde becerilemedi. Araştırma yapılabilir.
+
+* Bildirim denendi, ikinci kez araştırılabilir.
