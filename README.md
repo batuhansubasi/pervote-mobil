@@ -169,4 +169,4 @@ pervote-web
 
 ## Yapilabilecekler
 
-* 
+* Drawer nesnesine logout butonu koyuldu, fakat uygulamadan çıkış yapmak ilk seferde becerilemedi.
